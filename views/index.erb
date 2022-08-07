@@ -13,13 +13,13 @@
     <% @all_memos.each do |memo| %>
     <tbody>
       <tr>
-        <td><a href=<%= "/memos/#{memo['id']}" %>><%= h memo["title"] %></a></td>
+        <td><a href="/memos/<%= memo['id'] %>"><%= h memo["title"] %></a></td>
         <td><%= memo["created_at"] %></td>
-        <td><button><a href =<%="/memos/#{memo['id']}/edit" %>>編集</a></button></td>
+        <td><button><a href="/memos/<%= memo['id'] %>/edit">編集</a></button></td>
         <td>
-          <form action = <%= "memos/delete/#{memo['id']}" %>  method = "post">
-          <input type= "submit" value= "削除">
-          <input type= "hidden" name= "_method" value= "delete">
+          <form action="memos/delete/<%= memo['id'] %>" method="post">
+          <input type="submit" value="削除">
+          <input type="hidden" name="_method" value="delete">
           </form>
         </td>
       </tr>
@@ -27,4 +27,4 @@
     <% end %>
   </table>
 <% end %>
-<a href="/memos/new"><input type= "button" class= "button" value= "新規登録"></a>
+<a href="/memos/new"><input type="button" class="button" value="新規登録"></a>

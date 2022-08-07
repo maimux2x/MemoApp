@@ -1,13 +1,13 @@
 <h2 class="page-title">メモの新規登録</h2>
-<a class="nav-button" href= "/memos">一覧へ戻る</a>
-<form action= "/memos/new" method= "post">
+<a class="nav-button" href="/memos">一覧へ戻る</a>
+<form action="/memos/new" method="post">
   <div>
     <label for="title">タイトル</label>
-    <input required minlength="1" maxlength="30" type="text" name= "title">
+    <input required minlength="1" maxlength="30" type="text" name="title" autocomplete="off">
   </div>
   <div>
     <label for="title">メモ</label>
-    <textarea required minlength="1" maxlength="200" id="memo" name= "memo_desc"></textarea>
+    <textarea required minlength="1" maxlength="200" id="memo" name="memo_desc"></textarea>
   </div>
-  <input type="submit" class= "button" value= "保存">
+  <input type="submit" class="button" value="保存">
 </form>

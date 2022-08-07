@@ -19,7 +19,7 @@ class BaseMemosData
     @params = params
   end
 
-  def self.check(file_name, memo)
+  def self.register(file_name, memo)
     base_memos = JSON.parse(File.read(file_name))
     base_memos << memo
 
@@ -81,7 +81,7 @@ post '/memos/new' do
   raw_memo = BaseMemosData.new(params)
   memo = raw_memo.params
 
-  BaseMemosData.check('memos.json', memo)
+  BaseMemosData.register('memos.json', memo)
 
   redirect '/memos'
 end

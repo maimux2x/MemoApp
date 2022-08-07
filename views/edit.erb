@@ -1,14 +1,14 @@
 <h2 class="page-title">メモの編集画面</h2>
-<a class ="nav-button" href= "/memos">一覧へ戻る</a>
-<form action= <%= "/memos/#{@memo["id"]}" %> method = "post">
+<a class="nav-button" href="/memos">一覧へ戻る</a>
+<form action="/memos/<%= @memo["id"] %>" method="post">
   <div>
-    <label for= "title">タイトル</label>
-    <input required minlength="1" maxlength="30" type= "text" name= "title" value= <%= h @memo["title"]%>>
+    <label for="title">タイトル</label>
+    <input required minlength="1" maxlength="30" type="text" name="title" autocomplete="off" value="<%= @memo["title"] %>">
   </div>
   <div>
-    <label for= "title">メモ</label>
-    <textarea required minlength="1" maxlength="200" id="memo" name= "memo_desc"><%= h @memo["memo_desc"]%></textarea>
+    <label for="title">メモ</label>
+    <textarea required minlength="1" maxlength="200" id="memo" name="memo_desc"><%= @memo["memo_desc"] %></textarea>
   </div>
-  <input type= "hidden" name= "_method" value= "patch">
-  <input type= "submit" class= "button" value= "更新">
+  <input type="hidden" name="_method" value="patch">
+  <input type="submit" class="button" value="更新">
 </form>
