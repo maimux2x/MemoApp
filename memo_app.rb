@@ -110,7 +110,7 @@ patch '/memos/:id' do
 end
 
 delete '/memos/delete/:id' do
-  all_memos = get_memos('memos.json')
+  all_memos = get_memos(FILE_NAME)
   all_memos.each do |memo|
     all_memos -= [memo] if memo['id'] == params['id']
   end
