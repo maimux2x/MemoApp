@@ -7,6 +7,8 @@ require 'securerandom'
 
 set :show_exceptions, :after_handler
 
+FILE_NAME = 'memos.json'
+
 # メモのインスタンスを作成し保存
 class BaseMemosData
   attr_accessor :params
@@ -34,7 +36,7 @@ class BaseMemosData
 end
 
 before '/memos/:id*' do
-  @memos = get_memos('memos.json')
+  @memos = get_memos(FILE_NAME)
   @memos.each do |hash|
     @memo_data = hash if hash['id'] == params['id']
   end
@@ -64,8 +66,7 @@ error StandardError do
 end
 
 get '/memos' do
-  all_memos = get_memos('memos.json')
-  @all_memos = all_memos
+  @all_memos = get_memos(FILE_NAME)
   erb :index
 end
 
@@ -77,11 +78,11 @@ get '/memos/new' do
   erb :new
 end
 
-post '/memos/new' do
+post '/memos' do
   raw_memo = BaseMemosData.new(params)
   memo = raw_memo.params
 
-  BaseMemosData.register('memos.json', memo)
+  BaseMemosData.register(FILE_NAME, memo)
 
   redirect '/memos'
 end
@@ -104,7 +105,7 @@ patch '/memos/:id' do
   @memo_data['title'] = params['title']
   @memo_data['memo_desc'] = params['memo_desc']
 
-  BaseMemosData.update('memos.json', @memos)
+  BaseMemosData.update(FILE_NAME, @memos)
   redirect "/memos/#{@memo_data['id']}"
 end
 
@@ -114,6 +115,6 @@ delete '/memos/delete/:id' do
     all_memos -= [memo] if memo['id'] == params['id']
   end
 
-  BaseMemosData.update('memos.json', all_memos)
+  BaseMemosData.update(FILE_NAME, all_memos)
   redirect '/memos'
 end
