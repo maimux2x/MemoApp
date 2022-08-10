@@ -1,0 +1,53 @@
+
+.memo-content {
+  text-align:center;
+}
+.app-title {
+  margin-bottom: 20px;
+}
+.page-title {
+  margin-bottom: 20px;
+}
+.message {
+  margin-bottom: 15px;
+}
+table,
+td {
+  border: 1px solid #333;
+  margin: auto;
+  margin-bottom: 20px;
+  table-layout: fixed;
+  width: 1200px;
+}
+
+thead,
+tfoot {
+  background-color: #333;
+  color: #fff;
+}
+.button {
+  background-color: #333;
+  color: #fff;
+  width: 100px;
+  border-radius: 5px;
+  padding: 18px, 32px;
+}
+
+form div {
+  margin-bottom: 14px;
+}
+
+label {
+    display: block;
+    font-weight: bold;
+}
+
+input[type="text"],
+textarea {
+  width: 500px;
+  padding: .5em;
+  border: solid 1px #aaa;
+  border-radius: 4px;
+  outline-color: #9dbbff;
+  vertical-align: middle;
+}
