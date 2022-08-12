@@ -1,5 +1,6 @@
 db:
   development:
     dbname: memos
-    user: maimu
-    password: Kuma1110
+    user: 
+    password: 
+    
