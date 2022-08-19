@@ -12,23 +12,22 @@ set :show_exceptions, :after_handler
 
 # メモのインスタンスを作成し保存
 class BaseMemosData
-  attr_accessor :params
+  attr_accessor :params, :id, :created_at
 
   def initialize(params)
-    params['id'] = SecureRandom.uuid
-    created_at = Time.new
-    params['created_at'] = created_at
+    @id = SecureRandom.uuid
+    @created_at = Time.new
     @params = params
   end
 
-  def self.register(memo)
+  def self.register(id, params, created_at)
     CONNECTION.prepare(
       'insert_memo',
       "insert into #{TABLE} (id, title, memo_desc, created_at) values ($1, $2, $3, $4)"
     )
     CONNECTION.exec_prepared(
       'insert_memo',
-      [memo['id'].to_s, memo['title'].to_s, memo['memo_desc'].to_s, memo['created_at'].to_s]
+      [id, params['title'].to_s, params['memo_desc'].to_s, created_at]
     )
   end
 
@@ -99,9 +98,8 @@ end
 
 post '/memos' do
   raw_memo = BaseMemosData.new(params)
-  memo = raw_memo.params
 
-  BaseMemosData.register(memo)
+  BaseMemosData.register(raw_memo.id, raw_memo.params, raw_memo.created_at)
 
   redirect '/memos'
 end
