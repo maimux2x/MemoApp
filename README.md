@@ -9,8 +9,16 @@ Sinatraで作成したメモアプリをローカルでお試しいただくこ�
 $ git clone https://github.com/自分のアカウント名/MemoApp.git
 ```
 4. `bundle install` を実行してください。
-5. `ruby memo_app.rb -p 4567` を実行してください。
-6. http://localhost:4567/memos/ にアクセスするとメモアプリをお試しいただくことが可能です。
+  - pgがインストールできない場合は以下を実行後に再度`bundle install` を実行してください。
+
+  ```
+  bundle config build.pg --with-pg-config=<path to pg_config>
+  ```
+
+5. dbinit.mdの手順に従ってPostreSQLでデータベース、テーブル、ロールの作成を行ってください。
+6. 5で作成したロールとパスワードをdatabase.ymlに設定してください。
+7. `ruby memo_app.rb -p 4567` を実行してください。
+8. http://localhost:4567/memos/ にアクセスするとメモアプリをお試しいただくことが可能です。
 ## 注意
 - 新規メモを作成する場合、タイトルと内容は必須です。
 - メモのタイトルは1文字以上30文字以内でご入力ください。

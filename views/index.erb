@@ -1,5 +1,5 @@
 <h2 class="page-title">メモ一覧</h2>
-<% if @memos.length == 0 %>
+<% if @all_memos.ntuples == 0 %>
   <p class="message">新しいメモを登録しよう！</p>
 <% else %>
   <table>
@@ -14,7 +14,7 @@
     <tbody>
       <tr>
         <td><a href="/memos/<%= memo['id'] %>"><%= h memo["title"] %></a></td>
-        <td><%= memo["created_at"] %></td>
+        <td><%= DateTime.parse(memo["created_at"]).strftime("%Y年%m月%d日 %H:%M") %></td>
         <td><button><a href="/memos/<%= memo['id'] %>/edit">編集</a></button></td>
         <td>
           <form action="memos/delete/<%= memo['id'] %>" method="post">

@@ -2,41 +2,48 @@
 
 require 'sinatra'
 require 'sinatra/reloader'
-require 'json'
 require 'securerandom'
+require_relative 'memosdata_connection'
+
+TABLE = 'memosdata'
+CONNECTION = MemosDataConnection.connect
 
 set :show_exceptions, :after_handler
 
-FILE_NAME = 'memos.json'
-
 # メモのインスタンスを作成し保存
 class BaseMemosData
-  attr_accessor :params
+  attr_accessor :title, :memo_desc, :id, :created_at
 
-  def initialize(params)
-    params['id'] = SecureRandom.uuid
-
-    created_at = Time.new
-    params['created_at'] = created_at.strftime('%Y年%m月%d日%H時%M分')
-    @params = params
+  def initialize(title, memo_desc)
+    @id = SecureRandom.uuid
+    @title = title
+    @memo_desc = memo_desc
+    @created_at = Time.new
   end
 
-  def self.register(file_name, memo)
-    base_memos = JSON.parse(File.read(file_name))
-    base_memos << memo
-
-    BaseMemosData.update(file_name, base_memos)
+  def self.register(id, title, memo_desc, created_at)
+    CONNECTION.exec_params(
+      "insert into #{TABLE} values ($1, $2, $3, $4)",
+      [id, title, memo_desc, created_at]
+    )
   end
 
-  def self.update(file_name, memo)
-    File.open(file_name, 'w') do |file|
-      JSON.dump(memo, file)
-    end
+  def self.update(title, memo_desc, id)
+    CONNECTION.exec_params(
+      "update #{TABLE} set title = $1, memo_desc = $2 where id = $3",
+      [title, memo_desc, id]
+    )
+  end
+
+  def self.delete(id)
+    CONNECTION.exec_params(
+      "delete from #{TABLE} where id = $1", [id]
+    )
   end
 end
 
 before '/memos/:id*' do
-  @memos = get_memos(FILE_NAME)
+  @memos = get_memosdata(TABLE)
   @memos.each do |hash|
     @memo_data = hash if hash['id'] == params['id']
   end
@@ -49,8 +56,8 @@ helpers do
 end
 
 helpers do
-  def get_memos(file_name)
-    @memos = JSON.parse(File.read(file_name))
+  def get_memosdata(table)
+    CONNECTION.exec("select * from #{table}")
   end
 end
 
@@ -66,7 +73,7 @@ error StandardError do
 end
 
 get '/memos' do
-  @all_memos = get_memos(FILE_NAME)
+  @all_memos = get_memosdata(TABLE)
   erb :index
 end
 
@@ -79,10 +86,11 @@ get '/memos/new' do
 end
 
 post '/memos' do
-  raw_memo = BaseMemosData.new(params)
-  memo = raw_memo.params
+  raw_memo = BaseMemosData.new(params['title'], params['memo_desc'])
 
-  BaseMemosData.register(FILE_NAME, memo)
+  BaseMemosData.register(
+    raw_memo.id, raw_memo.title, raw_memo.memo_desc, raw_memo.created_at
+  )
 
   redirect '/memos'
 end
@@ -102,19 +110,14 @@ get '/memos/:id/edit' do
 end
 
 patch '/memos/:id' do
-  @memo_data['title'] = params['title']
-  @memo_data['memo_desc'] = params['memo_desc']
-
-  BaseMemosData.update(FILE_NAME, @memos)
+  BaseMemosData.update(params['title'], params['memo_desc'], @memo_data['id'])
   redirect "/memos/#{@memo_data['id']}"
 end
 
 delete '/memos/delete/:id' do
-  all_memos = get_memos(FILE_NAME)
+  all_memos = get_memosdata(TABLE)
   all_memos.each do |memo|
-    all_memos -= [memo] if memo['id'] == params['id']
+    BaseMemosData.delete(memo['id']) if memo['id'] == params['id']
   end
-
-  BaseMemosData.update(FILE_NAME, all_memos)
   redirect '/memos'
 end
